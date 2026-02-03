@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/png" href="/logo.png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PickFlix</title>
+</head>
+
+<script>
+  window.onerror = function (msg, url, line, col, error) {
+    var div = document.createElement('div');
+    div.style.cssText = 'position:fixed; top:0; left:0; right:0; padding:20px; background:red; color:white; z-index:9999; font-family:monospace; font-size:16px; white-space:pre-wrap;';
+    div.textContent = 'Runtime Error:\n' + msg + '\n' + url + ':' + line + ':' + col + '\n' + (error ? error.stack : '');
+    document.body.appendChild(div);
+  };
+  window.addEventListener('unhandledrejection', function (e) {
+    var div = document.createElement('div');
+    div.style.cssText = 'position:fixed; bottom:0; left:0; right:0; padding:20px; background:orange; color:black; z-index:9999; font-family:monospace; font-size:16px; white-space:pre-wrap;';
+    div.textContent = 'Unhandled Rejection:\n' + e.reason;
+    document.body.appendChild(div);
+  });
+</script>
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.jsx"></script>
+</body>
+
+</html>
