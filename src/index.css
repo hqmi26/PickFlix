@@ -198,3 +198,11 @@ body {
   color: var(--neon-red);
   transform: rotate(12deg);
 }
+
+@media (max-width: 600px) {
+  .card-container {
+    width: 85vw;
+    height: 55vh;
+    max-height: 500px;
+  }
+}
