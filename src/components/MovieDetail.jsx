@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { fetchMovieVideos, fetchWatchProviders } from '../services/tmdb';
+import { fetchMovieVideos } from '../services/tmdb';
 import { motion } from 'framer-motion';
 
 const MovieDetail = ({ movie, onClose }) => {
     const [trailerKey, setTrailerKey] = useState(null);
     const [showTrailer, setShowTrailer] = useState(false);
-    const [providers, setProviders] = useState(null);
+
 
     useEffect(() => {
         if (movie?.id) {
@@ -15,39 +15,13 @@ const MovieDetail = ({ movie, onClose }) => {
                 if (trailer) setTrailerKey(trailer.key);
             });
 
-            fetchWatchProviders(movie.id).then(data => {
-                setProviders(data);
-            });
+
         }
     }, [movie]);
 
     if (!movie) return null;
 
-    const renderProviderSection = (title, items) => {
-        if (!items || items.length === 0) return null;
-        return (
-            <div style={{ marginBottom: '15px' }}>
-                <h4 style={{ color: 'var(--text-gray)', fontSize: '0.9rem', marginBottom: '8px' }}>{title}</h4>
-                <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-                    {items.map(provider => (
-                        <div key={provider.provider_id} title={provider.provider_name} style={{
-                            width: '40px',
-                            height: '40px',
-                            borderRadius: '8px',
-                            overflow: 'hidden',
-                            border: '1px solid rgba(255, 255, 255, 0.2)'
-                        }}>
-                            <img
-                                src={`https://image.tmdb.org/t/p/original${provider.logo_path}`}
-                                alt={provider.provider_name}
-                                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                            />
-                        </div>
-                    ))}
-                </div>
-            </div>
-        );
-    };
+
 
     return (
         <motion.div
@@ -220,24 +194,7 @@ const MovieDetail = ({ movie, onClose }) => {
                         {movie.desc}
                     </p>
 
-                    {/* Where to Watch Section */}
-                    {providers && (providers.flatrate || providers.rent || providers.buy) && (
-                        <div style={{
-                            background: 'rgba(255, 255, 255, 0.05)',
-                            padding: '20px',
-                            borderRadius: '15px',
-                            marginBottom: '30px'
-                        }}>
-                            <h3 style={{ color: 'var(--neon-gold)', marginBottom: '15px', fontSize: '1.2rem' }}>Where to Watch</h3>
-                            {renderProviderSection('Stream', providers.flatrate)}
-                            {renderProviderSection('Rent', providers.rent)}
-                            {renderProviderSection('Buy', providers.buy)}
 
-                            <div style={{ marginTop: '15px', fontSize: '0.8rem', color: '#666', textAlign: 'right' }}>
-                                Data provided by <a href={providers.link} target="_blank" rel="noopener noreferrer" style={{ color: '#aaa', textDecoration: 'none' }}>JustWatch</a>
-                            </div>
-                        </div>
-                    )}
 
                     {/* Action Buttons inside modal */}
                     <div style={{
