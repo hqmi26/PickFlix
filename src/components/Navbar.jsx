@@ -1,21 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import logo from '../assets/logo.png';
 import { Heart, Home, LogOut, Sun, Moon, Users, User, Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import ThemeSwitcher from './ThemeSwitcher';
 
-const Navbar = ({ currentView, onViewChange, watchlistCount, onSignOut, currentTheme, onThemeChange, mode, onModeChange }) => {
+const Navbar = ({ currentView, onViewChange, watchlistCount, onSignOut, mode, onModeChange }) => {
     return (
         <nav style={{
             position: 'absolute',
-            top: 0,
+            top: '20px',
             left: 0,
             width: '100%',
             padding: '20px',
             display: 'flex',
             justifyContent: 'space-between',
-            alignItems: 'center',
-            zIndex: 50
+            alignItems: 'flex-start', // Changed to flex-start for mobile menu alignment
+            zIndex: 50,
+            pointerEvents: 'none' // Let clicks pass through empty areas
         }}>
             {/* Logo Section */}
             <div
@@ -27,32 +27,41 @@ const Navbar = ({ currentView, onViewChange, watchlistCount, onSignOut, currentT
                     display: 'flex',
                     alignItems: 'center',
                     gap: '10px',
-                    cursor: 'pointer'
+                    cursor: 'pointer',
+                    pointerEvents: 'auto', // Re-enable pointer events
+                    height: '50px' // Fixed height for consistency
                 }}>
                 <img src={logo} alt="PickFlix Logo" style={{ width: '30px', height: '30px', objectFit: 'contain' }} />
                 <h1 style={{ fontSize: '1.2rem', fontWeight: 'bold', margin: 0 }}>
-                    <span className={(currentTheme === 'cyberpunk' || currentTheme === 'classic') ? "neon-text-red" : "neon-text-gold"}>Pick</span>
+                    <span className={"neon-text-red"}>Pick</span>
                     <span className="neon-text-gold">Flix</span>
                 </h1>
             </div>
 
             {/* Collapsible Navigation Menu */}
-            <NavigationMenu
-                currentView={currentView}
-                onViewChange={onViewChange}
-                watchlistCount={watchlistCount}
-                onSignOut={onSignOut}
-                currentTheme={currentTheme}
-                onThemeChange={onThemeChange}
-                mode={mode}
-                onModeChange={onModeChange}
-            />
+            <div style={{ pointerEvents: 'auto' }}>
+                <NavigationMenu
+                    currentView={currentView}
+                    onViewChange={onViewChange}
+                    watchlistCount={watchlistCount}
+                    onSignOut={onSignOut}
+                    mode={mode}
+                    onModeChange={onModeChange}
+                />
+            </div>
         </nav>
     );
 };
 
-const NavigationMenu = ({ currentView, onViewChange, watchlistCount, onSignOut, currentTheme, onThemeChange, mode, onModeChange }) => {
+const NavigationMenu = ({ currentView, onViewChange, watchlistCount, onSignOut, mode, onModeChange }) => {
     const [isOpen, setIsOpen] = useState(false);
+    const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+    useEffect(() => {
+        const handleResize = () => setIsMobile(window.innerWidth < 768);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     const toggleMenu = () => setIsOpen(!isOpen);
 
@@ -67,8 +76,8 @@ const NavigationMenu = ({ currentView, onViewChange, watchlistCount, onSignOut, 
             }
         },
         open: {
-            width: 'auto',
-            height: 'auto',
+            width: isMobile ? '60px' : 'auto', // Narrow width for mobile vertical layout
+            height: isMobile ? 'auto' : '50px', // Auto height for mobile vertical layout
             transition: {
                 type: "spring",
                 stiffness: 400,
@@ -91,16 +100,20 @@ const NavigationMenu = ({ currentView, onViewChange, watchlistCount, onSignOut, 
             animate={isOpen ? "open" : "closed"}
             variants={menuVariants}
             style={{
-                borderRadius: '30px',
+                borderRadius: '25px',
                 display: 'flex',
+                flexDirection: isMobile ? 'column' : 'row', // Vertical on mobile
                 alignItems: 'center',
-                justifyContent: isOpen ? 'flex-start' : 'center',
+                justifyContent: isMobile ? 'flex-start' : (isOpen ? 'flex-start' : 'center'),
                 gap: '10px',
                 padding: '5px',
-                overflow: isOpen ? 'visible' : 'hidden',
+                overflow: 'hidden',
                 position: 'relative',
-                minWidth: '50px', // Ensure circle shape when closed
-                minHeight: '50px'
+                minWidth: '50px',
+                minHeight: '50px',
+                backgroundColor: isMobile && isOpen ? 'rgba(0,0,0,0.8)' : undefined, // Darker bg for mobile menu
+                backdropFilter: isMobile && isOpen ? 'blur(15px)' : undefined,
+                boxShadow: isMobile && isOpen ? '0 4px 30px rgba(0, 0, 0, 0.5)' : undefined,
             }}
         >
             {/* Toggle Button */}
@@ -116,7 +129,10 @@ const NavigationMenu = ({ currentView, onViewChange, watchlistCount, onSignOut, 
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    zIndex: 2 // Ensure it's always clickable
+                    zIndex: 2,
+                    width: '40px',
+                    height: '40px',
+                    flexShrink: 0
                 }}
             >
                 {isOpen ? <X size={20} /> : <Menu size={20} />}
@@ -126,18 +142,23 @@ const NavigationMenu = ({ currentView, onViewChange, watchlistCount, onSignOut, 
             <AnimatePresence>
                 {isOpen && (
                     <motion.div
-                        style={{ display: 'flex', gap: '10px', paddingRight: '10px' }}
+                        style={{
+                            display: 'flex',
+                            flexDirection: isMobile ? 'column' : 'row',
+                            gap: '10px',
+                            paddingRight: isMobile ? '0' : '10px',
+                            paddingBottom: isMobile ? '10px' : '0',
+                            alignItems: 'center'
+                        }}
                         initial="closed"
                         animate="open"
                         exit="closed"
                     >
-                        <motion.div variants={itemVariants}>
-                            <ThemeSwitcher currentTheme={currentTheme} onThemeChange={onThemeChange} />
-                        </motion.div>
+
 
                         <motion.button
                             variants={itemVariants}
-                            onClick={() => onModeChange(mode === 'dark' ? 'light' : 'dark')}
+                            onClick={() => { onModeChange(mode === 'dark' ? 'light' : 'dark'); }}
                             style={buttonStyle(mode === 'dark')}
                             title={mode === 'dark' ? "Switch to Light Mode" : "Switch to Dark Mode"}
                         >
@@ -146,7 +167,7 @@ const NavigationMenu = ({ currentView, onViewChange, watchlistCount, onSignOut, 
 
                         <motion.button
                             variants={itemVariants}
-                            onClick={() => onViewChange('deck')}
+                            onClick={() => { onViewChange('deck'); if (isMobile) toggleMenu(); }}
                             style={buttonStyle(currentView === 'deck')}
                             title="Deck"
                         >
@@ -155,7 +176,7 @@ const NavigationMenu = ({ currentView, onViewChange, watchlistCount, onSignOut, 
 
                         <motion.button
                             variants={itemVariants}
-                            onClick={() => onViewChange('multiplayer')}
+                            onClick={() => { onViewChange('multiplayer'); if (isMobile) toggleMenu(); }}
                             style={buttonStyle(currentView === 'multiplayer')}
                             title="Multiplayer"
                         >
@@ -164,7 +185,7 @@ const NavigationMenu = ({ currentView, onViewChange, watchlistCount, onSignOut, 
 
                         <motion.button
                             variants={itemVariants}
-                            onClick={() => onViewChange('watchlist')}
+                            onClick={() => { onViewChange('watchlist'); if (isMobile) toggleMenu(); }}
                             style={{ ...buttonStyle(currentView === 'watchlist'), position: 'relative' }}
                             title="Watchlist"
                         >
@@ -190,7 +211,7 @@ const NavigationMenu = ({ currentView, onViewChange, watchlistCount, onSignOut, 
 
                         <motion.button
                             variants={itemVariants}
-                            onClick={() => onViewChange('account')}
+                            onClick={() => { onViewChange('account'); if (isMobile) toggleMenu(); }}
                             style={buttonStyle(currentView === 'account')}
                             title="Account"
                         >
@@ -199,7 +220,7 @@ const NavigationMenu = ({ currentView, onViewChange, watchlistCount, onSignOut, 
 
                         <motion.button
                             variants={itemVariants}
-                            onClick={onSignOut}
+                            onClick={() => { onSignOut(); if (isMobile) toggleMenu(); }}
                             style={{ ...buttonStyle(false), color: 'var(--neon-red)' }}
                             title="Sign Out"
                         >
@@ -223,7 +244,9 @@ const buttonStyle = (isActive) => ({
     alignItems: 'center',
     justifyContent: 'center',
     transition: 'all 0.3s ease',
-    whiteSpace: 'nowrap'
+    whiteSpace: 'nowrap',
+    width: '40px',
+    height: '40px'
 });
 
 export default Navbar;

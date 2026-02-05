@@ -141,102 +141,95 @@ const MultiplayerRoom = ({ room, onLeave }) => {
     return (
         <div style={{ width: '100%', height: '100%', position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
 
+            {/* Header Controls */}
             <div style={{
-                position: 'absolute',
-                top: '20px',
-                left: '20px',
-                zIndex: 20,
+                width: '100%',
                 display: 'flex',
-                flexDirection: 'column',
-                gap: '10px',
-                alignItems: 'flex-start'
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                padding: '15px 20px',
+                zIndex: 20,
+                background: 'linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%)', // Subtle gradient for visibility
+                marginBottom: '10px' // Space between header and deck
             }}>
-                <div style={{
-                    padding: '8px 15px',
-                    borderRadius: '20px',
-                    border: '1px solid var(--neon-gold)',
-                    color: 'var(--neon-gold)',
-                    background: 'rgba(0,0,0,0.5)',
-                    fontWeight: 'bold',
-                    width: '180px',
-                    textAlign: 'center',
-                    boxSizing: 'border-box'
-                }}>
-                    Room: {room.code}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    <div style={{
+                        padding: '6px 12px',
+                        borderRadius: '15px',
+                        border: '1px solid var(--neon-gold)',
+                        color: 'var(--neon-gold)',
+                        background: 'rgba(0,0,0,0.5)',
+                        fontWeight: 'bold',
+                        fontSize: '0.9rem',
+                        textAlign: 'center'
+                    }}>
+                        Room: {room.code}
+                    </div>
+
+                    <button
+                        onClick={() => setShowMatches(true)}
+                        style={{
+                            background: 'var(--neon-gold)',
+                            color: 'black',
+                            border: 'none',
+                            borderRadius: '15px',
+                            padding: '6px 12px',
+                            cursor: 'pointer',
+                            fontSize: '0.8rem',
+                            fontWeight: 'bold',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: '5px',
+                            boxShadow: '0 0 10px rgba(255, 215, 0, 0.3)',
+                        }}
+                    >
+                        <span>🏆 Matches</span>
+                        <span style={{
+                            background: 'black',
+                            color: 'var(--neon-gold)',
+                            borderRadius: '50%',
+                            width: '18px',
+                            height: '18px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontSize: '0.8rem'
+                        }}>{roomMatches.length}</span>
+                    </button>
                 </div>
 
                 <button
-                    onClick={() => setShowMatches(true)}
+                    onClick={async () => {
+                        if (window.confirm("Leave the room?")) {
+                            await leaveRoom(room.id);
+                            localStorage.removeItem('pickflix-multiplayer-state');
+                            onLeave();
+                        }
+                    }}
                     style={{
-                        background: 'var(--neon-gold)',
-                        color: 'black',
-                        border: 'none',
-                        borderRadius: '20px',
+                        background: 'rgba(0,0,0,0.5)',
+                        color: 'var(--text-gray)',
+                        border: '1px solid var(--text-gray)',
                         padding: '8px 15px',
+                        borderRadius: '8px',
                         cursor: 'pointer',
                         fontSize: '0.9rem',
                         fontWeight: 'bold',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        gap: '8px',
-                        boxShadow: '0 0 10px rgba(255, 215, 0, 0.3)',
-                        transition: 'transform 0.2s ease',
-                        width: '180px',
-                        boxSizing: 'border-box'
+                        transition: 'all 0.3s ease'
                     }}
-                    onMouseOver={e => e.currentTarget.style.transform = 'scale(1.05)'}
-                    onMouseOut={e => e.currentTarget.style.transform = 'scale(1)'}
+                    onMouseOver={(e) => {
+                        e.target.style.color = 'var(--neon-red)';
+                        e.target.style.borderColor = 'var(--neon-red)';
+                    }}
+                    onMouseOut={(e) => {
+                        e.target.style.color = 'var(--text-gray)';
+                        e.target.style.borderColor = 'var(--text-gray)';
+                    }}
                 >
-                    <span>🏆 Room Matches</span>
-                    <span style={{
-                        background: 'black',
-                        color: 'var(--neon-gold)',
-                        borderRadius: '50%',
-                        width: '20px',
-                        height: '20px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        fontSize: '0.8rem'
-                    }}>{roomMatches.length}</span>
+                    EXIT
                 </button>
             </div>
-
-            <button
-                onClick={async () => {
-                    if (window.confirm("Leave the room?")) {
-                        await leaveRoom(room.id);
-                        localStorage.removeItem('pickflix-multiplayer-state');
-                        onLeave();
-                    }
-                }}
-                style={{
-                    position: 'absolute',
-                    top: '20px',
-                    right: '20px',
-                    background: 'rgba(0,0,0,0.5)',
-                    color: 'var(--text-gray)',
-                    border: '1px solid var(--text-gray)',
-                    padding: '8px 15px',
-                    borderRadius: '8px',
-                    cursor: 'pointer',
-                    zIndex: 20,
-                    fontSize: '0.9rem',
-                    fontWeight: 'bold',
-                    transition: 'all 0.3s ease'
-                }}
-                onMouseOver={(e) => {
-                    e.target.style.color = 'var(--neon-red)';
-                    e.target.style.borderColor = 'var(--neon-red)';
-                }}
-                onMouseOut={(e) => {
-                    e.target.style.color = 'var(--text-gray)';
-                    e.target.style.borderColor = 'var(--text-gray)';
-                }}
-            >
-                EXIT
-            </button>
 
             {loading ? (
                 <div style={{ color: 'var(--neon-gold)', fontSize: '1.5rem', marginTop: '50px' }}>

@@ -109,8 +109,8 @@ const Account = ({ session, onBack }) => {
     return (
         <div style={{
             width: '100%',
-            maxWidth: '800px',
-            marginTop: '100px',
+            maxWidth: '500px',
+            marginTop: '60px',
             padding: '20px',
             color: '#fff',
             zIndex: 10
@@ -332,34 +332,38 @@ const Account = ({ session, onBack }) => {
                 {activeTab === 'friends' && (
                     <div>
                         {/* Search Bar */}
-                        <form onSubmit={handleSearch} style={{ display: 'flex', gap: '10px', marginBottom: '30px' }}>
+                        <form onSubmit={handleSearch} style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '30px' }}>
                             <input
                                 type="text"
                                 placeholder="Find friends by username..."
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 style={{
-                                    flex: 1,
+                                    width: '100%',
                                     padding: '12px 20px',
                                     borderRadius: '30px',
                                     border: '1px solid rgba(255,255,255,0.2)',
                                     background: 'rgba(0,0,0,0.3)',
                                     color: '#fff',
-                                    outline: 'none'
+                                    outline: 'none',
+                                    boxSizing: 'border-box'
                                 }}
                             />
                             <button
                                 type="submit"
                                 style={{
+                                    width: '100%',
                                     background: 'var(--neon-orange)',
                                     border: 'none',
                                     color: '#fff',
-                                    padding: '0 20px',
+                                    padding: '12px 20px',
                                     borderRadius: '30px',
                                     cursor: 'pointer',
                                     display: 'flex',
                                     alignItems: 'center',
-                                    gap: '5px'
+                                    justifyContent: 'center',
+                                    gap: '5px',
+                                    fontWeight: 'bold'
                                 }}
                             >
                                 <Search size={20} /> Search

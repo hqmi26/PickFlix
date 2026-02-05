@@ -176,7 +176,7 @@ const MultiplayerLobby = ({ onStartGame, onBack }) => {
         <div className="multiplayer-lobby" style={{
             width: '100%',
             maxWidth: '600px',
-            padding: '2rem',
+            padding: '1.5rem',
             color: 'var(--text-white)',
             display: 'flex',
             flexDirection: 'column',
@@ -202,25 +202,32 @@ const MultiplayerLobby = ({ onStartGame, onBack }) => {
                             border: '2px solid var(--neon-red)',
                             color: 'var(--neon-red)',
                             boxShadow: '0 0 15px var(--neon-red), inset 0 0 10px var(--neon-red)',
-                            textShadow: '0 0 5px var(--neon-red)'
+                            textShadow: '0 0 5px var(--neon-red)',
+                            width: '100%'
                         }}
                     >
                         {loading ? 'Creating...' : 'Create Room'}
                     </button>
-                    <div style={{ display: 'flex', gap: '10px' }}>
+
+                    <div style={{
+                        display: 'flex',
+                        flexDirection: 'column', // Changed to column for stacking
+                        gap: '10px',
+                        width: '100%'
+                    }}>
                         <input
                             type="text"
                             placeholder="Enter Code"
                             value={joinCode}
                             onChange={(e) => setJoinCode(e.target.value)}
-                            style={inputStyle}
+                            style={{ ...inputStyle, width: '100%' }} // Full width
                         />
                         <button
                             onClick={handleJoinRoom}
                             disabled={loading || !joinCode}
                             style={{
                                 ...buttonStyle,
-                                flex: 1,
+                                width: '100%', // Full width
                                 background: 'transparent',
                                 border: '2px solid var(--neon-gold)',
                                 color: 'var(--neon-gold)',

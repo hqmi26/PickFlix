@@ -18,6 +18,7 @@ buildscript {
 apply from: "variables.gradle"
 
 allprojects {
+    buildDir = new File("C:/Users/A.Haqimi/.tmp/PickFlix/build/${project.name}")
     repositories {
         google()
         mavenCentral()

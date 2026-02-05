@@ -11,7 +11,6 @@ import { fetchPopularMovies, fetchTopRatedMovies, fetchUpcomingMovies, fetchDisc
 import FilterBar from './components/FilterBar';
 import { supabase } from './services/supabase';
 import Auth from './components/Auth';
-import { themes } from './styles/themes';
 import MultiplayerLobby from './components/MultiplayerLobby';
 import MultiplayerRoom from './components/MultiplayerRoom';
 import Account from './components/Account';
@@ -34,10 +33,7 @@ function App() {
   const hasActiveFilters = filters.genre || filters.minRating > 0 || filters.year;
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [activeMovie, setActiveMovie] = useState(null);
-  const [currentTheme, setCurrentTheme] = useState(() => {
-    const saved = localStorage.getItem('pickflix-theme');
-    return themes[saved] ? saved : 'cyberpunk';
-  });
+
   const [mode, setMode] = useState(() => {
     return localStorage.getItem('pickflix-mode') || 'dark';
   });
@@ -83,7 +79,39 @@ function App() {
   }, [currentView]);
 
   useEffect(() => {
-    const theme = themes[currentTheme][mode];
+    // Hardcoded Cyberpunk Theme Values
+    const cyberpunkTheme = {
+      dark: {
+        '--bg-dark': '#0a0a0a',
+        '--bg-gradient': 'radial-gradient(circle at 50% 50%, #1a1a2e 0%, #000000 100%)',
+        '--neon-primary': '#ff1f1f',
+        '--neon-secondary': '#ffdb4d',
+        '--neon-accent': '#ff8c00',
+        '--text-primary': '#ffffff',
+        '--text-secondary': '#a1a1a1',
+        '--card-bg': '#1a1a1a',
+        '--glass-bg': 'rgba(255, 255, 255, 0.05)',
+        '--glass-border': 'rgba(255, 255, 255, 0.1)',
+        '--glow-primary': '0 0 15px #ff1f1f',
+        '--glow-secondary': '0 0 15px #ffdb4d',
+      },
+      light: {
+        '--bg-dark': '#f0f0f5',
+        '--bg-gradient': 'radial-gradient(circle at 50% 50%, #ffffff 0%, #e0e0eb 100%)',
+        '--neon-primary': '#d60000',
+        '--neon-secondary': '#e6c200',
+        '--neon-accent': '#e67300',
+        '--text-primary': '#1a1a1a',
+        '--text-secondary': '#555555',
+        '--card-bg': '#ffffff',
+        '--glass-bg': 'rgba(0, 0, 0, 0.05)',
+        '--glass-border': 'rgba(0, 0, 0, 0.1)',
+        '--glow-primary': '0 0 15px rgba(214, 0, 0, 0.3)',
+        '--glow-secondary': '0 0 15px rgba(230, 194, 0, 0.3)',
+      }
+    };
+
+    const theme = cyberpunkTheme[mode];
     const root = document.documentElement;
 
     const setProp = (name, value) => root.style.setProperty(name, value);
@@ -107,9 +135,8 @@ function App() {
     setProp('--glow-primary', theme['--glow-primary']);
     setProp('--glow-secondary', theme['--glow-secondary']);
 
-    localStorage.setItem('pickflix-theme', currentTheme);
     localStorage.setItem('pickflix-mode', mode);
-  }, [currentTheme, mode]);
+  }, [mode]);
 
 
 
@@ -215,8 +242,9 @@ function App() {
       height: '100vh',
       display: 'flex',
       flexDirection: 'column',
-      justifyContent: 'center',
+      justifyContent: 'flex-start',
       alignItems: 'center',
+      paddingTop: '130px',
       background: 'var(--bg-gradient)',
       overflow: 'hidden'
     }}>
@@ -334,8 +362,6 @@ function App() {
         onViewChange={setCurrentView}
         watchlistCount={watchlist.length}
         onSignOut={handleSignOut}
-        currentTheme={currentTheme}
-        onThemeChange={setCurrentTheme}
         mode={mode}
         onModeChange={setMode}
       />
@@ -344,14 +370,14 @@ function App() {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        marginTop: '80px', // Increased space for navbar
+        marginTop: 0, // Handled by parent padding
         width: '100%',
         height: '100%',
         position: 'relative'
       }}>
         {currentView === 'deck' && (
           <div className="category-switcher" style={{
-            marginBottom: '20px',
+            marginBottom: '50px',
             display: 'flex',
             gap: '10px',
             zIndex: 10,
@@ -364,10 +390,10 @@ function App() {
                 background: 'rgba(255, 255, 255, 0.1)',
                 border: `1px solid ${filters.genre || filters.minRating > 0 || filters.year ? 'var(--neon-orange)' : 'rgba(255, 255, 255, 0.2)'}`,
                 color: filters.genre || filters.minRating > 0 || filters.year ? 'var(--neon-orange)' : 'var(--text-gray)',
-                padding: '8px 16px',
+                padding: '6px 12px',
                 borderRadius: '20px',
                 cursor: 'pointer',
-                fontSize: '0.9rem',
+                fontSize: '0.8rem',
                 transition: 'all 0.3s ease',
                 display: 'flex',
                 alignItems: 'center',
@@ -387,10 +413,10 @@ function App() {
                   background: (category === cat && !hasActiveFilters) ? 'rgba(255, 215, 0, 0.2)' : 'rgba(255, 255, 255, 0.1)',
                   border: `1px solid ${(category === cat && !hasActiveFilters) ? 'var(--neon-gold)' : 'rgba(255, 255, 255, 0.2)'}`,
                   color: (category === cat && !hasActiveFilters) ? 'var(--neon-gold)' : 'var(--text-gray)',
-                  padding: '8px 16px',
+                  padding: '6px 12px',
                   borderRadius: '20px',
                   cursor: 'pointer',
-                  fontSize: '0.9rem',
+                  fontSize: '0.8rem',
                   textTransform: 'capitalize',
                   transition: 'all 0.3s ease'
                 }}
@@ -425,7 +451,7 @@ function App() {
             {lastDirection && (
               <div style={{
                 position: 'absolute',
-                bottom: '100px',
+                bottom: '20px',
                 color: lastDirection === 'right' ? 'var(--neon-gold)' : 'var(--neon-red)',
                 fontWeight: 'bold',
                 fontSize: '2rem',

@@ -23,14 +23,13 @@
             </intent-filter>
 
             <!-- Deep Link Intent Filter -->
-            <intent-filter android:autoVerify="true">
+            <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <!-- Generic scheme -->
                 <data android:scheme="com.pickflix.app" />
-                <!-- Web link support (host must match your detailed setup, using com.pickflix.app for custom scheme here) -->
             </intent-filter>
+
 
         </activity>
 
@@ -41,7 +40,7 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"></meta-data>
+                android:resource="@xml/file_paths" />
         </provider>
     </application>
 

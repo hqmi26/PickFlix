@@ -53,7 +53,7 @@ const MovieDetail = ({ movie, onClose }) => {
                 onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the modal
                 style={{
                     width: '100%',
-                    maxWidth: '800px',
+                    maxWidth: '500px',
                     maxHeight: '90vh',
                     overflowY: 'auto',
                     position: 'relative',
@@ -92,7 +92,7 @@ const MovieDetail = ({ movie, onClose }) => {
                 <div style={{
                     position: 'relative',
                     width: '100%',
-                    height: '300px',
+                    height: '200px',
                     backgroundImage: !showTrailer ? `url(${movie.backdrop || movie.image})` : 'none',
                     backgroundSize: 'cover',
                     backgroundPosition: 'center',
@@ -132,7 +132,7 @@ const MovieDetail = ({ movie, onClose }) => {
                                     src={movie.image}
                                     alt={movie.title}
                                     style={{
-                                        width: '100px',
+                                        width: '80px',
                                         borderRadius: '10px',
                                         boxShadow: '0 5px 15px rgba(0,0,0,0.5)',
                                         border: '2px solid var(--neon-gold)'
@@ -140,7 +140,7 @@ const MovieDetail = ({ movie, onClose }) => {
                                 />
                                 <div style={{ paddingBottom: '10px' }}>
                                     <h1 className="neon-text-gold" style={{
-                                        fontSize: '2rem',
+                                        fontSize: '1.5rem',
                                         margin: 0,
                                         textShadow: '0 0 10px rgba(0,0,0,0.5)'
                                     }}>
@@ -163,7 +163,7 @@ const MovieDetail = ({ movie, onClose }) => {
                 </div>
 
                 {/* Content */}
-                <div style={{ padding: '30px' }}>
+                <div style={{ padding: '20px' }}>
                     <div style={{
                         display: 'flex',
                         alignItems: 'center',
@@ -189,7 +189,7 @@ const MovieDetail = ({ movie, onClose }) => {
                         lineHeight: '1.6',
                         color: '#e0e0e0',
                         fontSize: '1.1rem',
-                        marginBottom: '30px'
+                        marginBottom: '20px'
                     }}>
                         {movie.desc}
                     </p>
@@ -210,10 +210,10 @@ const MovieDetail = ({ movie, onClose }) => {
                                     background: 'var(--neon-red)',
                                     border: 'none',
                                     color: 'white',
-                                    padding: '10px 30px',
-                                    borderRadius: '30px',
+                                    padding: '8px 20px',
+                                    borderRadius: '25px',
                                     cursor: 'pointer',
-                                    fontSize: '1rem',
+                                    fontSize: '0.9rem',
                                     fontWeight: 'bold',
                                     boxShadow: '0 0 15px var(--neon-red)'
                                 }}
@@ -227,10 +227,10 @@ const MovieDetail = ({ movie, onClose }) => {
                                 background: 'transparent',
                                 border: '1px solid var(--text-gray)',
                                 color: 'var(--text-gray)',
-                                padding: '10px 30px',
-                                borderRadius: '30px',
+                                padding: '8px 20px',
+                                borderRadius: '25px',
                                 cursor: 'pointer',
-                                fontSize: '1rem'
+                                fontSize: '0.9rem'
                             }}
                         >
                             Close

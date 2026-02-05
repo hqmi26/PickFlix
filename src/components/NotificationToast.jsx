@@ -20,7 +20,7 @@ const NotificationToast = ({ message, onClose }) => {
                     exit={{ opacity: 0, y: 20, scale: 0.9 }}
                     style={{
                         position: 'fixed',
-                        bottom: '120px', // Above action buttons
+                        bottom: '20px', // Below action buttons
                         left: '50%',
                         transform: 'translateX(-50%)',
                         background: 'rgba(20, 20, 30, 0.9)',

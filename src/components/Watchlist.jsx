@@ -10,7 +10,7 @@ const Watchlist = ({ movies, onRemove, onMovieClick }) => {
             overflowY: 'auto',
             height: 'calc(100vh - 100px)', // Adjust for navbar
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))',
             gap: '20px',
             paddingBottom: '100px' // Space for scrolling
         }}>

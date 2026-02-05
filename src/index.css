@@ -103,9 +103,9 @@ body {
 .card-container {
   position: relative;
   width: 90vw;
-  max-width: 360px;
-  height: 65vh;
-  max-height: 650px;
+  max-width: 320px;
+  height: 60vh;
+  max-height: 600px;
   perspective: 1000px;
 }
 
@@ -201,8 +201,8 @@ body {
 
 @media (max-width: 600px) {
   .card-container {
-    width: 85vw;
-    height: 55vh;
-    max-height: 500px;
+    width: 80vw;
+    height: 50vh;
+    max-height: 450px;
   }
 }

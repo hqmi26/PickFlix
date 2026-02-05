@@ -6,7 +6,7 @@ const ActionButtons = ({ onLike, onNope }) => {
         <div style={{
             display: 'flex',
             gap: '60px',
-            marginTop: '30px',
+            marginTop: '45px',
             position: 'relative',
             zIndex: 10
         }}>
