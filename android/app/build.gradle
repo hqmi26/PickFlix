@@ -2,12 +2,12 @@ apply plugin: 'com.android.application'
 
 android {
     namespace = "com.pickflix.app"
-    compileSdk = rootProject.ext.compileSdkVersion
+    compileSdk = 35
     defaultConfig {
         applicationId "com.pickflix.app"
         minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
+        targetSdkVersion 35
+        versionCode 2
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
@@ -22,8 +22,18 @@ android {
             useLegacyPackaging = true
         }
     }
+
+    signingConfigs {
+        release {
+            storeFile file("../my-release-key.keystore")
+            storePassword "password123"
+            keyAlias "my-key-alias"
+            keyPassword "password123"
+        }
+    }
     buildTypes {
         release {
+            signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }

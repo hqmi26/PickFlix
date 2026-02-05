@@ -7,7 +7,7 @@ import Deck from './components/Deck';
 import ActionButtons from './components/ActionButtons';
 import Watchlist from './components/Watchlist';
 import MovieDetail from './components/MovieDetail';
-import { fetchPopularMovies, fetchTopRatedMovies, fetchUpcomingMovies, fetchDiscoverMovies } from './services/tmdb';
+import { fetchPopularMovies, fetchTopRatedMovies, fetchUpcomingMovies, fetchDiscoverMovies, fetchKoreanMovies } from './services/tmdb';
 import FilterBar from './components/FilterBar';
 import { supabase } from './services/supabase';
 import Auth from './components/Auth';
@@ -56,6 +56,7 @@ function App() {
         } else if (category === 'popular') data = await fetchPopularMovies();
         else if (category === 'top_rated') data = await fetchTopRatedMovies();
         else if (category === 'upcoming') data = await fetchUpcomingMovies();
+        else if (category === 'korean') data = await fetchKoreanMovies();
 
         // Filter out movies already in watchlist to avoid duplicates in deck if desired
         // For now, we'll keep them but maybe we can filter later
@@ -402,7 +403,7 @@ function App() {
             >
               <span style={{ fontSize: '1.2em' }}>⚡</span> Filters
             </button>
-            {['popular', 'top_rated', 'upcoming'].map((cat) => (
+            {['popular', 'top_rated', 'upcoming', 'korean'].map((cat) => (
               <button
                 key={cat}
                 onClick={() => {

@@ -4,7 +4,7 @@ import Deck from './Deck';
 import ActionButtons from './ActionButtons';
 import NotificationToast from './NotificationToast';
 
-import { castVote, subscribeToRoom, leaveRoom, getRoomMatches, getRoomVotes, ensureJoined } from '../services/multiplayer';
+import { castVote, subscribeToRoom, leaveRoom, cancelRoom, getRoomMatches, getRoomVotes, ensureJoined } from '../services/multiplayer';
 import { fetchPopularMovies, fetchDiscoverMovies, fetchMovieDetails, fetchMovieVideos } from '../services/tmdb';
 import { supabase } from '../services/supabase';
 
@@ -18,12 +18,19 @@ const MultiplayerRoom = ({ room, onLeave }) => {
     const [allVotes, setAllVotes] = useState([]); // Store all votes to calculate matches
     const [showMatches, setShowMatches] = useState(false);
     const [selectedPreviewMovie, setSelectedPreviewMovie] = useState(null);
+    const [isHost, setIsHost] = useState(false);
     const deckRef = useRef(null);
 
     useEffect(() => {
         const loadMovies = async () => {
             setLoading(true);
             try {
+                // Check if host
+                const { data: { user } } = await supabase.auth.getUser();
+                if (user && user.id === room.host_id) {
+                    setIsHost(true);
+                }
+
                 // Use room config to fetch movies. Default to popular if no config.
                 let data = [];
                 if (room.config && (room.config.genre || room.config.year)) {
@@ -201,16 +208,24 @@ const MultiplayerRoom = ({ room, onLeave }) => {
 
                 <button
                     onClick={async () => {
-                        if (window.confirm("Leave the room?")) {
-                            await leaveRoom(room.id);
-                            localStorage.removeItem('pickflix-multiplayer-state');
-                            onLeave();
+                        if (isHost) {
+                            if (window.confirm("Are you sure you want to CANCEL this room? This will kick everyone out.")) {
+                                await cancelRoom(room.id);
+                                localStorage.removeItem('pickflix-multiplayer-state');
+                                onLeave();
+                            }
+                        } else {
+                            if (window.confirm("Leave the room?")) {
+                                await leaveRoom(room.id);
+                                localStorage.removeItem('pickflix-multiplayer-state');
+                                onLeave();
+                            }
                         }
                     }}
                     style={{
                         background: 'rgba(0,0,0,0.5)',
-                        color: 'var(--text-gray)',
-                        border: '1px solid var(--text-gray)',
+                        color: isHost ? 'var(--neon-red)' : 'var(--text-gray)',
+                        border: `1px solid ${isHost ? 'var(--neon-red)' : 'var(--text-gray)'}`,
                         padding: '8px 15px',
                         borderRadius: '8px',
                         cursor: 'pointer',
@@ -223,11 +238,11 @@ const MultiplayerRoom = ({ room, onLeave }) => {
                         e.target.style.borderColor = 'var(--neon-red)';
                     }}
                     onMouseOut={(e) => {
-                        e.target.style.color = 'var(--text-gray)';
-                        e.target.style.borderColor = 'var(--text-gray)';
+                        e.target.style.color = isHost ? 'var(--neon-red)' : 'var(--text-gray)';
+                        e.target.style.borderColor = isHost ? 'var(--neon-red)' : 'var(--text-gray)';
                     }}
                 >
-                    EXIT
+                    {isHost ? 'CANCEL' : 'EXIT'}
                 </button>
             </div>
 

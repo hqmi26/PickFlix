@@ -57,6 +57,29 @@ const fetchMovies = async (endpoint, page = 1) => {
 export const fetchPopularMovies = (page = 1) => fetchMovies('popular', page);
 export const fetchTopRatedMovies = (page = 1) => fetchMovies('top_rated', page);
 export const fetchUpcomingMovies = (page = 1) => fetchMovies('upcoming', page);
+export const fetchKoreanMovies = async (page = 1) => {
+    if (!API_KEY) return [];
+    try {
+        const response = await fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&language=en-US&with_original_language=ko&sort_by=popularity.desc&page=${page}`);
+        const data = await response.json();
+
+        if (!data.results) return [];
+
+        return data.results.map(movie => ({
+            id: movie.id,
+            title: movie.title,
+            genre: movie.genre_ids.map(id => GENRES[id]).slice(0, 2).join(' / ') || 'Unknown',
+            year: movie.release_date ? movie.release_date.split('-')[0] : 'Unknown',
+            image: movie.poster_path ? `${IMAGE_BASE_URL}${movie.poster_path}` : 'https://via.placeholder.com/500x750?text=No+Image',
+            backdrop: movie.backdrop_path ? `${IMAGE_BASE_URL}${movie.backdrop_path}` : null,
+            rating: movie.vote_average,
+            desc: movie.overview
+        }));
+    } catch (error) {
+        console.error("Error fetching Korean movies:", error);
+        return [];
+    }
+};
 
 export const fetchDiscoverMovies = async (filters = {}, page = 1) => {
     if (!API_KEY) return [];
